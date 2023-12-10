@@ -1,0 +1,19 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+
+[{GNUmakefile,makefile,Makefile,*.mk}]
+indent_style = tab
+trim_trailing_whitespace = false
+
+[{package.json,package-lock.json,*.yml,*.yaml}]
+indent_style = space
+indent_size = 2
+
+[*.patch.*]
+trim_trailing_whitespace = false
+

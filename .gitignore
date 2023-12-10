@@ -1,0 +1,29 @@
+# IDE
+.idea/shelf/
+.idea/workspace.xml
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+# User-specific stuff.
+.idea/dataSources.xml
+.idea/sqldialects.xml
+.idea/zigbrains.xml
+
+# Ignore nested project configuration folders.
+# Open git submodule as separate project if the configuration is needed.
+/**/.idea/
+/**/.vscode/extensions.json
+
+# Binaries and packages.
+/**/a.out
+/**/a.exe
+/**/*.wasm
+/**/node_modules/
+
+# Development VM
+nixos.qcow2
+go/pkg
+.bash_history
+.cache
+.emscripten_cache
+.lesshst
