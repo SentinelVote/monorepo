@@ -1,24 +1,27 @@
-# IDE
-.idea/shelf/
-.idea/workspace.xml
-.idea/httpRequests/
-.idea/dataSources/
-.idea/dataSources.local.xml
-# User-specific stuff.
-.idea/dataSources.xml
-.idea/sqldialects.xml
-.idea/zigbrains.xml
+# IDE: Ignore everything.
+.idea/*
+.vscode/*
+# IDE: Selectively allow files.
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/monorepo.iml
+!.idea/vcs.xml
+!.vscode/extensions.json
 
 # Ignore nested project configuration folders.
-# Open git submodule as separate project if the configuration is needed.
-/**/.idea/
-/**/.vscode/extensions.json
+# Open the folder as a separate project/window if the configuration is needed.
+*/**/.idea/
+*/**/.vscode
+!*/**/.vscode/extensions.json
+fabricBlockchain
+voterApp
+website
 
 # Binaries and packages.
-/**/a.out
-/**/a.exe
-/**/*.wasm
-/**/node_modules/
+**/*.wasm
+**/a.exe
+**/a.out
+**/node_modules/
 
 # Development VM
 nixos.qcow2
