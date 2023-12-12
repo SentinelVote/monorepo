@@ -17,15 +17,15 @@ fabricBlockchain
 voterApp
 website
 
-# Binaries and packages.
+# Binaries and Dependencies (Packages/Libraries)
 **/*.wasm
 **/a.exe
 **/a.out
+**/go/pkg
 **/node_modules/
 
 # Development VM
-nixos.qcow2
-go/pkg
+*.qcow2
 .bash_history
 .cache
 .emscripten_cache

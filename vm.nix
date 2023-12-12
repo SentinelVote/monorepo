@@ -12,6 +12,7 @@
   nix.nixPath = [ "nixpkgs=${pkgs.path}" ];
   nix.settings.experimental-features = [ "flakes" "nix-command" ];
   services.openssh.enable = true;
+  virtualisation.diskSize = 3 * 1024;
   virtualisation.docker.enable = true;
   virtualisation.docker.enableOnBoot = true;
   virtualisation.forwardPorts = [
