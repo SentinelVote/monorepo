@@ -23,10 +23,11 @@
           '';
         };
 
-        # We are emulating `go get github.com/zbohm/lirisi` here.
+        # We are emulating `go get github.com/zbohm/lirisi`.
         lirisi = pkgs.buildGoModule rec {
           pname = "lirisi";
           version = "0.0.1";
+          doCheck = false;
           # nix-shell -p nurl --command 'nurl https://github.com/zbohm/lirisi/ 2>/dev/null'
           src = pkgs.fetchFromGitHub {
             owner = "zbohm";
@@ -35,37 +36,44 @@
             sha256 = "sha256-HhEJem+AdA/4FoeteVSGp+1RXwYsjsinS0BgfmV9u7k=";
           };
           vendorHash = "sha256-UEx/ZBKEex5gVX+jC5EQlgkASyqGrgSM2cju52b1oi0=";
-          doCheck = false;
+          # `|| true` skips further checks because `go mod tidy` is enough to produce vendorHash.
+          # Ideally, lirisi repository should include go.sum to mitigate this issue, then we can remove preBuild.
           preBuild = ''
+            go mod tidy || true
           '';
         };
-
 
       in
       {
         devShells.default = pkgs.mkShell {
           packages = [
-            pkgs.go-tools # staticcheck
-            pkgs.go_1_21
-            pkgs.gotools  # godoc, etc.
+            pkgs.nixos-shell
+            pkgs.overmind
+            pkgs.tmux
+            # frontend
             pkgs.nodejs_18
+            # backend
+            pkgs.go_1_21
+            pkgs.go-tools # staticcheck
+            pkgs.gotools  # godoc, etc.
+            # blockchain
             pkgs.curl
             pkgs.jq
-            pkgs.nixos-shell
             fablo
             lirisi
           ];
           hardeningDisable = [ "fortify" ];
           shellHook = ''
-            if [ -z "$monorepo" ]; then
-              export monorepo="$(pwd)"
-              alias monorepo="cd $monorepo"
-              alias frontend="cd $monorepo/frontend"
-              alias backend="cd $monorepo/backend"
-              alias blockchain="cd $monorepo/blockchain"
-              alias run="bash -c 'set -m ; cd frontend && npm run dev & cd ../backend && go run . & fg %1'"
+            if [ -z "$sv" ]; then
+              export sv="$(pwd)"
+              alias sv="cd $sv"
+              alias fe="cd $sv/frontend"
+              alias be="cd $sv/backend"
+              alias fabric="cd $sv/blockchain"
+              alias up="cd $sv && overmind start"
+              alias upsplit="cd $sv && tmux new-session -d -s mySession 'cd frontend && npm run dev' \; split-window -v 'cd backend && go run .' \; split-window -h 'cd blockchain && fablo recreate && htop -t' \; select-layout even-horizontal \; attach"
             fi
-            PS1="\[\033[1;32m\][nix-shell:\w]\$\[\033[0m\] "
+            export PS1="\[\033[1;32m\][\w]\$\[\033[0m\] "
           '';
         };
       }
