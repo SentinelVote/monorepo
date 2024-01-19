@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/monorepo.iml" filepath="$PROJECT_DIR$/.idea/monorepo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend/.idea/frontend.iml" filepath="$PROJECT_DIR$/frontend/.idea/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/.idea/backend.iml" filepath="$PROJECT_DIR$/backend/.idea/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/blockchain/.idea/blockchain.iml" filepath="$PROJECT_DIR$/blockchain/.idea/blockchain.iml" />
     </modules>
   </component>
 </project>

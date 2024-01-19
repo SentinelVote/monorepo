@@ -11,8 +11,8 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fabricBlockchain" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/voterApp" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/website" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/frontend" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/backend" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/blockchain" vcs="Git" />
   </component>
 </project>

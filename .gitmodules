@@ -1,9 +1,9 @@
-[submodule "voterApp"]
-	path = voterApp
-	url = git@github.com:QuantumSecureVote/voterApp.git
-[submodule "fabricBlockchain"]
-	path = fabricBlockchain
-	url = git@github.com:QuantumSecureVote/fabricBlockchain.git
-[submodule "website"]
-	path = website
-	url = git@github.com:QuantumSecureVote/website.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:SentinelVote/voter-app.git
+[submodule "backend"]
+	path = backend
+	url = git@github.com:SentinelVote/backend.git
+[submodule "blockchain"]
+	path = blockchain
+	url = git@github.com:SentinelVote/blockchain.git
