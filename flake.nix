@@ -8,6 +8,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+
         fablo = pkgs.stdenv.mkDerivation {
           name = "fablo";
           src = pkgs.fetchurl {
@@ -23,34 +24,23 @@
         };
 
         # We are emulating `go get github.com/zbohm/lirisi` here.
-        lirical = pkgs.buildGoModule rec {
-          pname = "lirical";
+        lirisi = pkgs.buildGoModule rec {
+          pname = "lirisi";
           version = "0.0.1";
-
-          # How I got this value:
-          # nix-shell -p nurl
-          # nurl https://github.com/zbohm/lirisi/ 0963fdab3e353be12f42e923101d0d15ab54c058 2>/dev/null
-#          src = pkgs.fetchFromGitHub {
-#            owner = "zbohm";
-#            repo = "lirisi";
-#            rev = "0963fdab3e353be12f42e923101d0d15ab54c058";
-#            sha256 = "sha256-OfCKqkeSNgdde/F7xM6tM+PxTR/KxyWrnhZc4gL+boI=";
-#          };
-#          vendorHash = "sha256-JXfTQb7JNIIODxEAWQiSoo56eUVnyhI+ZOYGgK1mxXg=";
-
-          # How I got this value:
-          # nix-shell -p nurl
-          # nurl https://github.com/zbohm/lirisi/ 2>/dev/null
+          # nix-shell -p nurl --command 'nurl https://github.com/zbohm/lirisi/ 2>/dev/null'
           src = pkgs.fetchFromGitHub {
             owner = "zbohm";
             repo = "lirisi";
             rev = "07d6e5fe96f8503b742a5a0a142cf31e701f4921";
-            hash = "sha256-HhEJem+AdA/4FoeteVSGp+1RXwYsjsinS0BgfmV9u7k=";
+            sha256 = "sha256-HhEJem+AdA/4FoeteVSGp+1RXwYsjsinS0BgfmV9u7k=";
           };
           vendorHash = "sha256-UEx/ZBKEex5gVX+jC5EQlgkASyqGrgSM2cju52b1oi0=";
-
           doCheck = false;
+          preBuild = ''
+          '';
         };
+
+
       in
       {
         devShells.default = pkgs.mkShell {
@@ -63,7 +53,7 @@
             pkgs.jq
             pkgs.nixos-shell
             fablo
-            lirical
+            lirisi
           ];
           hardeningDisable = [ "fortify" ];
           shellHook = ''
