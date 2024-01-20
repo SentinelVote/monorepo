@@ -66,6 +66,10 @@
           shellHook = ''
             if [ -z "$sv" ]; then
               export sv="$(pwd)"
+
+              alias oms="SCHEMA=simulation overmind s"
+              alias omp="SCHEMA=production overmind s"
+
               alias sv="cd $sv"
               alias fe="cd $sv/frontend"
               alias be="cd $sv/backend"
