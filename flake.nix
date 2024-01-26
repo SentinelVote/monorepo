@@ -48,7 +48,6 @@
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.nixos-shell
-            pkgs.overmind
             pkgs.tmux
             # frontend
             pkgs.nodejs_18
@@ -66,15 +65,10 @@
           shellHook = ''
             if [ -z "$sv" ]; then
               export sv="$(pwd)"
-
-              alias oms="SCHEMA=simulation overmind s"
-              alias omp="SCHEMA=production overmind s"
-
               alias sv="cd $sv"
               alias fe="cd $sv/frontend"
               alias be="cd $sv/backend"
               alias fabric="cd $sv/blockchain"
-              alias up="cd $sv && overmind start"
               alias upsplit="cd $sv && tmux new-session -d -s mySession 'cd frontend && npm run dev' \; split-window -v 'cd backend && go run .' \; split-window -h 'cd blockchain && fablo recreate && htop -t' \; select-layout even-horizontal \; attach"
             fi
             export PS1="\[\033[1;32m\][\w]\$\[\033[0m\] "
