@@ -1,9 +1,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:SentinelVote/voter-app.git
-[submodule "backend"]
-	path = backend
-	url = git@github.com:SentinelVote/backend.git
 [submodule "blockchain"]
 	path = blockchain
 	url = git@github.com:SentinelVote/blockchain.git
