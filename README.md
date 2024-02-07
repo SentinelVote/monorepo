@@ -3,7 +3,8 @@
 ### Steps
 
 1. Have dependencies installed (node, go, docker)
-2. Prepare four different linux/unix terminals (wsl2/bash/etc).
+2. Start docker, either from terminal or Docker Desktop.
+3. Prepare four different linux/unix terminals (wsl2/bash/etc).
 
 ### Commands
 
@@ -21,6 +22,7 @@ git clone --recurse-submodules --remote-submodules git@github.com:SentinelVote/m
 # Setup Hyperledger Fabric.
 cd monorepo/blockchain
 ./setup-fablo.sh
+./fablo.sh prune
 ./fablo.sh generate
 ./fablo.sh up
 # Wait for the blockchain to finish setting up.
