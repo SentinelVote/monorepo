@@ -49,6 +49,8 @@
           packages = [
             pkgs.nixos-shell
             pkgs.tmux
+            # HTTPS (run mkcert -install)
+            pkgs.mkcert
             # frontend
             pkgs.nodejs_18
             # backend
