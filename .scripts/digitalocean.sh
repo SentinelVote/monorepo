@@ -130,7 +130,7 @@ GO_TAR="go${GO_VERSION}.linux-amd64.tar.gz"
 sudo wget -O "$GO_TAR" "$GO_URL"
 sudo tar -C /usr/local -xzf "$GO_TAR"
 rm -f "$GO_TAR"
-. /etc/profile
+PATH="${PATH}:/usr/local/go/bin"
 unset GO_VERSION GO_URL GO_TAR
 
 # -------------------------------------------------------------------------------------------------
