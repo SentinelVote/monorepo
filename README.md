@@ -44,8 +44,8 @@ npm run dev
 cd monorepo/frontend
 
 # Serial test (one by one).
-PLAYWRIGHT_USER_START_FROM=1 PLAYWRIGHT_USER_END_AT=20 npx playwright test tests/e2e-serial.spec.ts
+PLAYWRIGHT_USER_START_FROM=1 PLAYWRIGHT_USER_END_AT=20 npx playwright test --headed --browser=chromium tests/e2e-serial.spec.ts
 
 # Parallel test (all at once).
-PLAYWRIGHT_USER_START_FROM=1 PLAYWRIGHT_USER_END_AT=20 npx playwright test tests/e2e-parallel.spec.ts
+PLAYWRIGHT_USER_START_FROM=1 PLAYWRIGHT_USER_END_AT=20 npx playwright test --headed --browser=chromium tests/e2e-parallel.spec.ts
 ```
