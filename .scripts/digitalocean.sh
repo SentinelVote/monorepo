@@ -2,14 +2,13 @@
 # shellcheck shell=dash
 
 #
-# This script should be run as the root user.
-# ssh root@<ip-address>
+# This script should be run as the root user, see ./README.md for the command to run it.
 #
-
 # Relevant links:
 # https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 # https://zero-to-nix.com/concepts/nix-installer#using
+#
 
 set -eu
 fail () { printf %s\\n "$1" >&2 ; exit 1 ; }
@@ -26,7 +25,6 @@ if test -z "$(getent passwd 1000)" ; then
 fi
 sudo mkdir /home/unprivileged/.ssh || true
 sudo cp -f /root/.ssh/authorized_keys /home/"$NONROOT"/.ssh/
-sudo chown -R unprivileged:unprivileged /home/"$NONROOT"/
 
 # Allow full sudo access to the non-root user.
 printf %s\\n "unprivileged ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/"$NONROOT"
@@ -35,7 +33,7 @@ printf %s\\n "unprivileged ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/"$
 if test -z "$NONROOT"; then
   fail 'Error: NONROOT is not set.'
 else
-  trap 'sudo chown -R "$NONROOT":"$NONROOT" /home/"$NONROOT"/' EXIT
+  trap 'sudo chown -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"' EXIT
 fi
 
 # -------------------------------------------------------------------------------------------------
@@ -133,19 +131,20 @@ sudo wget -O "$GO_TAR" "$GO_URL"
 sudo tar -C /usr/local -xzf "$GO_TAR"
 rm -f "$GO_TAR"
 . /etc/profile
+unset GO_VERSION GO_URL GO_TAR
 
 # -------------------------------------------------------------------------------------------------
 # Clone and build the backend
 
-cd /home/"$NONROOT"
+cd "/home/${NONROOT}"
 git clone https://github.com/SentinelVote/backend.git
 cd backend || fail 'Error: Could not change to the backend directory.'
-go mod download && CGO_ENABLED=0 go build -o ../api
+go mod download && CGO_ENABLED=0 go build -o ./api
 
 # -------------------------------------------------------------------------------------------------
 # Clone and build the blockchain
 
-cd /home/"$NONROOT"
+cd "/home/${NONROOT}"
 git clone https://github.com/SentinelVote/blockchain.git
 cd blockchain || fail 'Error: Could not change to the blockchain directory.'
 ./setup-fablo.sh || fail 'Error: Could not set up the blockchain.'
@@ -153,7 +152,7 @@ cd blockchain || fail 'Error: Could not change to the blockchain directory.'
 ./fablo.sh generate
 
 # Add a symlink to the fablo.sh script as 'fablo' in /usr/local/bin
-sudo ln -s /home/"$NONROOT"/blockchain/fablo.sh /usr/local/bin/fablo
+sudo ln -s "/home/${NONROOT}/blockchain/fablo.sh" /usr/local/bin/fablo
 
 # -------------------------------------------------------------------------------------------------
 # Print the final instructions.
@@ -163,7 +162,7 @@ printf %s\\n '
 # The setup is complete. You can now log in as the unprivileged user and start the services.
 # SSH into the unprivileged user, and start tmux so that you can use multiple tabs.
 
-ssh unprivileged@do.sentinelvote.tech
+ssh unprivileged@service.sentinelvote.tech
 tmux
 
 # Split the tabs either,
@@ -175,6 +174,12 @@ cd $HOME/blockchain
 fablo recreate
 
 # To start the backend, wait for the blockchain to start. Then, run the following commands:
-cd $HOME
+cd $HOME/backend
 ./api --users 10000 --schema simulation-full
 '
+
+cd "$CURRENT_DIRECTORY" || fail 'Error: Could not change to the original directory.'
+sudo chown -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"
+unset CURRENT_DIRECTORY NONROOT apt-get fail || true
+printf %s\\n "Setup completed successfully."
+exit 0
