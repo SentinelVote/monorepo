@@ -147,12 +147,28 @@ go mod download && CGO_ENABLED=0 go build -o ./api
 cd "/home/${NONROOT}"
 git clone https://github.com/SentinelVote/blockchain.git
 cd blockchain || fail 'Error: Could not change to the blockchain directory.'
+
+# TODO: Use maximum number of instances (9).
+sed -i 's/instances: [2-9]/instances: 9/' fablo-config.yaml
+
+# Set up the blockchain.
 ./setup-fablo.sh || fail 'Error: Could not set up the blockchain.'
 ./fablo.sh prune
 ./fablo.sh generate
 
 # Add a symlink to the fablo.sh script as 'fablo' in /usr/local/bin
 sudo ln -s "/home/${NONROOT}/blockchain/fablo.sh" /usr/local/bin/fablo
+
+# Pre-pull the docker images
+docker pull softwaremill/fablo:1.2.0
+docker pull hyperledger/fabric-tools:2.5.4
+docker pull hyperledger/explorer-db:1.1.8
+docker pull hyperledger/explorer:1.1.8
+docker pull hyperledger/fabric-baseos:2.5.4
+docker pull hyperledger/fabric-ca:1.5.5
+docker pull hyperledger/fabric-ccenv:2.5.4
+docker pull hyperledger/fabric-orderer:2.5.4
+docker pull hyperledger/fabric-peer:2.5.4
 
 # -------------------------------------------------------------------------------------------------
 # Print the final instructions.
