@@ -12,6 +12,7 @@
 
 set -eu
 fail () { printf %s\\n "$1" >&2 ; exit 1 ; }
+seq  () { j=$1 ; while [ $j -le $2 ] ; do printf %s\\n $j ; j=$(( j + 1 )) ; done ; }
 CURRENT_DIRECTORY="$(pwd)"
 
 # -------------------------------------------------------------------------------------------------
@@ -141,6 +142,24 @@ git clone https://github.com/SentinelVote/backend.git
 cd backend || fail 'Error: Could not change to the backend directory.'
 go mod download && CGO_ENABLED=0 go build -o ./api
 
+# Create a systemd service for the backend
+cat <<EOF | sudo tee /etc/systemd/system/backend.service
+[Unit]
+Description=SentinelVote Backend
+
+[Service]
+WorkingDirectory=/home/unprivileged/backend
+ExecStart=/home/unprivileged/backend/api --users 1000 --schema production
+User=unprivileged
+Group=unprivileged
+Restart=always
+Environment="PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl enable backend.service
+
 # -------------------------------------------------------------------------------------------------
 # Clone and build the blockchain
 
@@ -173,8 +192,11 @@ docker pull hyperledger/fabric-peer:2.5.4
 # -------------------------------------------------------------------------------------------------
 # Print the final instructions.
 
+GREEN='\033[1;32m'
+NC='\033[0m'
+
 # shellcheck disable=SC2016
-printf %s\\n '
+printf "${GREEN}%s${NC}\n" '
 # The setup is complete. You can now log in as the unprivileged user and start the services.
 # SSH into the unprivileged user, and start tmux so that you can use multiple tabs.
 
@@ -197,4 +219,8 @@ cd $HOME/backend
 cd "$CURRENT_DIRECTORY" || fail 'Error: Could not change to the original directory.'
 sudo chown --verbose -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"
 printf %s\\n "Setup completed successfully."
-exit 0
+for i in $(seq 5 -1 1); do
+printf "%s\\n" "Rebooting the system in $i"
+sleep 1
+done
+sudo shutdown -r now || { echo 'Error: Could not reboot the system.'; exit 1; }
