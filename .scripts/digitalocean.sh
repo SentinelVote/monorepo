@@ -33,7 +33,7 @@ printf %s\\n "unprivileged ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/"$
 if test -z "$NONROOT"; then
   fail 'Error: NONROOT is not set.'
 else
-  trap 'sudo chown -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"' EXIT
+  trap 'sudo chown --verbose -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"' EXIT
 fi
 
 # -------------------------------------------------------------------------------------------------
@@ -195,7 +195,6 @@ cd $HOME/backend
 '
 
 cd "$CURRENT_DIRECTORY" || fail 'Error: Could not change to the original directory.'
-sudo chown -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"
-unset CURRENT_DIRECTORY NONROOT apt-get fail || true
+sudo chown --verbose -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"
 printf %s\\n "Setup completed successfully."
 exit 0
