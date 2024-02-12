@@ -173,16 +173,15 @@ docker pull hyperledger/fabric-orderer:2.5.4
 docker pull hyperledger/fabric-peer:2.5.4
 
 # -------------------------------------------------------------------------------------------------
-# Setup aliases for bash.
+# Setup aliases and helper-functions for bash.
 
+mkdir -p "/home/${NONROOT}/.local/bin"
+printf %s\\n "export PATH=\$PATH:/home/${NONROOT}/.local/bin" | sudo tee -a "/home/${NONROOT}/.profile"
 sudo cp -f /etc/skel/.bashrc "/home/${NONROOT}/.bashrc" || true
-tee -a "/home/${NONROOT}/.bashrc" <<EOF
 
+tee -a "/home/${NONROOT}/.bashrc" <<EOF
 alias blockchain='cd ~/blockchain'
 alias backend='cd ~/backend'
-alias backend_systemd_edit='sudo nano /etc/systemd/system/backend.service'
-alias backend_systemd_restart='sudo systemctl restart backend.service'
-
 alias ls="ls -AF --color=auto"
 alias nano="nano -L"
 alias grep='grep --color=auto'
@@ -193,7 +192,21 @@ alias rmdir='rmdir -v'
 alias ln='ln -v'
 alias chmod='chmod -c'
 alias chown='chown -c'
+EOF
 
+tee -a "/home/${NONROOT}/.local/bin/backend_update" <<EOF
+#!/bin/sh
+git -C ~/backend pull
+(cd ~/backend && go mod download)
+CGO_ENABLED=0 go build -o ~/backend/api ~/backend/.
+sudo systemctl stop backend.service
+sudo systemctl start backend.service
+EOF
+
+tee -a "/home/${NONROOT}/.local/bin/blockchain_update" <<EOF
+#!/bin/sh
+git -C ~/blockchain pull
+(cd ~/blockchain && fablo recreate)
 EOF
 
 # -------------------------------------------------------------------------------------------------
