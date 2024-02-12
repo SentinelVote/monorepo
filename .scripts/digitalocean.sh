@@ -76,23 +76,6 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 # -------------------------------------------------------------------------------------------------
-# Setup aliases for bash.
-
-sudo cp -f /etc/skel/.bashrc "/home/${NONROOT}/.bashrc" || true
-tee -a "/home/${NONROOT}/.bashrc" <<EOF
-alias ls="ls -AF --color=auto"
-alias nano="nano -L"
-alias grep='grep --color=auto'
-alias cp='cp -iv'
-alias mv='mv -iv'
-alias rm='rm -iv'
-alias rmdir='rmdir -v'
-alias ln='ln -v'
-alias chmod='chmod -c'
-alias chown='chown -c'
-EOF
-
-# -------------------------------------------------------------------------------------------------
 # Install Caddy
 apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
@@ -188,6 +171,30 @@ docker pull hyperledger/fabric-ca:1.5.5
 docker pull hyperledger/fabric-ccenv:2.5.4
 docker pull hyperledger/fabric-orderer:2.5.4
 docker pull hyperledger/fabric-peer:2.5.4
+
+# -------------------------------------------------------------------------------------------------
+# Setup aliases for bash.
+
+sudo cp -f /etc/skel/.bashrc "/home/${NONROOT}/.bashrc" || true
+tee -a "/home/${NONROOT}/.bashrc" <<EOF
+
+alias blockchain='cd ~/blockchain'
+alias backend='cd ~/backend'
+alias backend_systemd_edit='sudo nano /etc/systemd/system/backend.service'
+alias backend_systemd_restart='sudo systemctl restart backend.service'
+
+alias ls="ls -AF --color=auto"
+alias nano="nano -L"
+alias grep='grep --color=auto'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias rmdir='rmdir -v'
+alias ln='ln -v'
+alias chmod='chmod -c'
+alias chown='chown -c'
+
+EOF
 
 # -------------------------------------------------------------------------------------------------
 # Print the final instructions.
