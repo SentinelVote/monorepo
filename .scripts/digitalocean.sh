@@ -239,8 +239,4 @@ cd $HOME/backend
 cd "$CURRENT_DIRECTORY" || fail 'Error: Could not change to the original directory.'
 sudo chown --verbose -R "${NONROOT}:${NONROOT}" "/home/${NONROOT}"
 printf %s\\n "Setup completed successfully."
-for i in $(seq 5 -1 1); do
-printf "%s\\n" "Rebooting the system in $i"
-sleep 1
-done
-sudo shutdown -r now || { echo 'Error: Could not reboot the system.'; exit 1; }
+exit 0
