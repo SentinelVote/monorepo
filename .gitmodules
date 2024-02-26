@@ -7,3 +7,6 @@
 [submodule "backend"]
 	path = backend
 	url = git@github.com:SentinelVote/backend.git
+[submodule "website"]
+	path = website
+	url = git@github.com:SentinelVote/website.git
